@@ -86,3 +86,105 @@ h2,
 h3 {
   color: #d94f87;
     }
+
+/* 🎀 BOTÕES */
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin: 5px;
+  background: #f48fb1;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+button:hover {
+  background: #e66b99;
+  transform: scale(1.03);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 🧁 ÁREA DO JOGO */
+#area-jogo {
+  background: #ffffff;
+  border: 3px solid #ffc1d6;
+  border-radius: 24px;
+  padding: 25px;
+  margin-top: 30px;
+  box-shadow: 0 8px 20px #e9a4bf40;
+}
+
+#pergunta {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+#opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+/* 🌸 RESPOSTAS */
+.opcao {
+  background: #ffe0ec;
+  color: #8b3a5e;
+  border: 2px solid #ffc1d6;
+}
+
+.opcao:hover {
+  background: #ffc1d6;
+}
+
+.correta {
+  background: #a5d6a7 !important;
+  color: #24552a !important;
+}
+
+.incorreta {
+  background: #ef9a9a !important;
+  color: #702020 !important;
+}
+
+#resultado {
+  font-weight: bold;
+  margin: 15px 0;
+  font-size: 1.1rem;
+}
+
+/* 💕 RODAPÉ */
+footer {
+  margin-top: 40px;
+  padding: 25px;
+  text-align: center;
+  background: #ffd6e5;
+  color: #8b3a5e;
+}
+
+/* 📱 TELEMÓVEIS */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  main {
+    width: 94%;
+  }
+
+  #area-jogo {
+    padding: 16px;
+  }
+
+  button {
+    max-width: 100%;
+  }
+}
