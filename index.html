@@ -484,3 +484,98 @@
 
       const pergunta = jogoAtual.perguntas[indicePergunta];
       
+            const pergunta = jogoAtual.perguntas[indicePergunta];
+
+      document.getElementById("pergunta").textContent =
+        `Pergunta ${indicePergunta + 1} de ${jogoAtual.perguntas.length}: ${pergunta.p}`;
+
+      document.getElementById("resultado").textContent = "";
+      document.getElementById("proxima").style.display = "none";
+
+      const opcoes = document.getElementById("opcoes");
+      opcoes.innerHTML = "";
+
+      pergunta.o.forEach((opcao) => {
+        const botao = document.createElement("button");
+        botao.className = "opcao";
+        botao.textContent = opcao;
+        botao.onclick = () => verificarResposta(opcao, botao);
+        opcoes.appendChild(botao);
+      });
+    }
+
+    function verificarResposta(resposta, botaoEscolhido) {
+      if (respondida) return;
+      respondida = true;
+
+      const pergunta = jogoAtual.perguntas[indicePergunta];
+      const botoes = document.querySelectorAll("#opcoes button");
+
+      botoes.forEach((botao) => {
+        botao.disabled = true;
+
+        if (botao.textContent === pergunta.r) {
+          botao.classList.add("correta");
+        }
+      });
+
+      const resultado = document.getElementById("resultado");
+
+      if (resposta === pergunta.r) {
+        pontuacao++;
+        resultado.textContent = "🎉 Muito bem! Você acertou!";
+      } else {
+        botaoEscolhido.classList.add("incorreta");
+        resultado.textContent =
+          `💗 Quase! A resposta certa é: ${pergunta.r}`;
+      }
+
+      const proxima = document.getElementById("proxima");
+      proxima.style.display = "inline-block";
+
+      proxima.textContent =
+        indicePergunta === jogoAtual.perguntas.length - 1
+          ? "Ver resultado ⭐"
+          : "Próxima pergunta 🌷";
+    }
+
+    function proximaPergunta() {
+      if (indicePergunta < jogoAtual.perguntas.length - 1) {
+        indicePergunta++;
+        mostrarPergunta();
+      } else {
+        mostrarResultadoFinal();
+      }
+    }
+
+    function mostrarResultadoFinal() {
+      document.getElementById("pergunta").textContent =
+        `Você acertou ${pontuacao} de ${jogoAtual.perguntas.length} perguntas!`;
+
+      document.getElementById("opcoes").innerHTML = "";
+
+      const resultado = document.getElementById("resultado");
+
+      if (pontuacao === jogoAtual.perguntas.length) {
+        resultado.textContent = "🏆 Perfeito! Você acertou todas!";
+      } else if (pontuacao >= 2) {
+        resultado.textContent = "🌸 Muito bem! Continue aprendendo!";
+      } else {
+        resultado.textContent = "💕 Continue praticando! Você consegue!";
+      }
+
+      document.getElementById("proxima").style.display = "none";
+
+      const jogarNovamente = document.createElement("button");
+      jogarNovamente.textContent = "Jogar novamente 🎀";
+      jogarNovamente.onclick = () => iniciarJogo(jogoAtual);
+
+      document.getElementById("opcoes").appendChild(jogarNovamente);
+    }
+
+    function fecharJogo() {
+      document.getElementById("area-jogo").style.display = "none";
+      jogoAtual = null;
+    }
+
+    mostrarJogos();
