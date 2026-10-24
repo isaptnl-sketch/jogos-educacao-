@@ -421,3 +421,66 @@
         ]
       }
     ];
+    let jogoAtual = null;
+    let indicePergunta = 0;
+    let pontuacao = 0;
+    let respondida = false;
+
+    function mostrarJogos(lista = jogos) {
+      const container = document.getElementById("lista-jogos");
+      container.innerHTML = "";
+
+      lista.forEach((jogo) => {
+        const card = document.createElement("article");
+        card.className = "cartao-jogo";
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = `${jogo.emoji} ${jogo.nome}`;
+
+        const categoria = document.createElement("p");
+        categoria.className = "categoria";
+        categoria.textContent = jogo.categoria;
+
+        const descricao = document.createElement("p");
+        descricao.textContent = jogo.descricao;
+
+        const botao = document.createElement("button");
+        botao.textContent = "Jogar agora 💗";
+        botao.onclick = () => iniciarJogo(jogo);
+
+        card.append(titulo, categoria, descricao, botao);
+        container.appendChild(card);
+      });
+    }
+
+    function filtrarJogos() {
+      const termo = document.getElementById("pesquisa").value
+        .toLowerCase()
+        .trim();
+
+      const filtrados = jogos.filter((jogo) =>
+        `${jogo.nome} ${jogo.categoria} ${jogo.descricao}`
+          .toLowerCase()
+          .includes(termo)
+      );
+
+      mostrarJogos(filtrados);
+    }
+
+    function iniciarJogo(jogo) {
+      jogoAtual = jogo;
+      indicePergunta = 0;
+      pontuacao = 0;
+
+      document.getElementById("area-jogo").style.display = "flex";
+      document.getElementById("titulo-jogo").textContent =
+        `${jogo.emoji} ${jogo.nome}`;
+
+      mostrarPergunta();
+    }
+
+    function mostrarPergunta() {
+      respondida = false;
+
+      const pergunta = jogoAtual.perguntas[indicePergunta];
+      
