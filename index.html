@@ -1,33 +1,417 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogar para Aprender 🎀</title>
-    <link rel="stylesheet" href="estilo.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogar para Aprender 🎀</title>
+  <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
+
+  <header>
     <h1>🎀 Jogar para Aprender 🎀</h1>
-    <p>Aprender pode ser divertido!</p>
-    <h2>Bem-vindos ao nosso cantinho!</h2>
+    <p>Aprender brincando é muito mais divertido! 🌸</p>
+  </header>
 
-<p>
-    Aqui você encontra jogos educativos gratuitos
-    para aprender, testar seus conhecimentos
-    e se divertir!
-</p>
-    
-<section>
-    <h2>🎀 Nossos jogos educativos 🎀</h2>
+  <nav>
+    <a href="#inicio">Início</a>
+    <a href="#jogos">Jogos</a>
+    <a href="#sobre">Sobre</a>
+  </nav>
 
-    <div>
-        <h3>🔢 Desafio da Matemática</h3>
-        <p>Aprenda matemática resolvendo desafios divertidos!</p>
-        <button onclick="alert('Prepare-se para o desafio!')">
-            Jogar agora
-        </button>
+  <main>
+    <section id="inicio" class="boas-vindas">
+      <h2>Bem-vindo(a) ao nosso mundinho! 💗</h2>
+      <p>
+        Aqui você aprende matemática, português, ciências e muito mais
+        enquanto se diverte com jogos educativos!
+      </p>
+      <span>🌷 🧸 ⭐ 🩷 ⭐ 🧸 🌷</span>
+    </section>
+
+    <section id="jogos">
+      <h2>🌈 Escolha seu jogo favorito</h2>
+
+      <input
+        type="text"
+        id="pesquisa"
+        placeholder="🔎 Procurar um jogo..."
+        oninput="filtrarJogos()"
+      >
+
+      <div class="grade-jogos" id="lista-jogos"></div>
+    </section>
+
+    <section id="sobre" class="sobre">
+      <h2>🌸 Sobre o projeto</h2>
+      <p>
+        O Jogar para Aprender é um projeto educativo criado para ajudar
+        crianças e adolescentes a aprender de maneira divertida,
+        criativa e interativa.
+      </p>
+      <p>Estude, jogue e descubra coisas novas todos os dias! 💕</p>
+    </section>
+  </main>
+
+  <div id="area-jogo" class="modal" style="display: none;">
+    <div class="conteudo-modal">
+      <button class="fechar" onclick="fecharJogo()">✖</button>
+      <h2 id="titulo-jogo"></h2>
+      <p id="pergunta"></p>
+      <div id="opcoes"></div>
+      <p id="resultado"></p>
+      <button id="proxima" onclick="proximaPergunta()" style="display: none;">
+        Próxima pergunta 🌷
+      </button>
     </div>
-</section>
+  </div>
 
-</body>
-</html>
+  <footer>
+    <p>Feito com 💗 para aprender brincando!</p>
+  </footer>
+
+  <script>
+    const jogos = [
+      {
+        nome: "Matemática Divertida",
+        emoji: "🔢",
+        categoria: "Matemática",
+        descricao: "Pratique contas e números.",
+        perguntas: [
+          { p: "Quanto é 5 + 3?", o: ["6", "8", "9"], r: "8" },
+          { p: "Quanto é 10 - 4?", o: ["5", "6", "7"], r: "6" },
+          { p: "Quanto é 6 × 2?", o: ["12", "10", "14"], r: "12" },
+          { p: "Quanto é 20 ÷ 4?", o: ["4", "5", "6"], r: "5" }
+        ]
+      },
+      {
+        nome: "Português Mágico",
+        emoji: "📚",
+        categoria: "Português",
+        descricao: "Descubra palavras e gramática.",
+        perguntas: [
+          { p: "Qual palavra é um substantivo?", o: ["Correr", "Casa", "Bonito"], r: "Casa" },
+          { p: "Qual é o plural de flor?", o: ["Flors", "Flores", "Flore"], r: "Flores" },
+          { p: "Qual palavra é um adjetivo?", o: ["Feliz", "Mesa", "Pular"], r: "Feliz" },
+          { p: "Qual é o contrário de quente?", o: ["Morno", "Frio", "Seco"], r: "Frio" }
+        ]
+      },
+      {
+        nome: "Mundo das Ciências",
+        emoji: "🔬",
+        categoria: "Ciências",
+        descricao: "Explore a natureza e o universo.",
+        perguntas: [
+          { p: "Qual planeta é conhecido como planeta vermelho?", o: ["Marte", "Vênus", "Saturno"], r: "Marte" },
+          { p: "O que as plantas precisam para fazer fotossíntese?", o: ["Luz solar", "Plástico", "Areia apenas"], r: "Luz solar" },
+          { p: "Qual órgão bombeia o sangue?", o: ["Pulmão", "Coração", "Estômago"], r: "Coração" },
+          { p: "Em que estado a água fica quando congela?", o: ["Gasoso", "Líquido", "Sólido"], r: "Sólido" }
+        ]
+      },
+      {
+        nome: "Geografia pelo Mundo",
+        emoji: "🌎",
+        categoria: "Geografia",
+        descricao: "Conheça países e continentes.",
+        perguntas: [
+          { p: "Qual é a capital do Brasil?", o: ["Brasília", "Salvador", "Manaus"], r: "Brasília" },
+          { p: "Em qual continente fica o Brasil?", o: ["Europa", "América do Sul", "Ásia"], r: "América do Sul" },
+          { p: "Qual é o maior oceano do mundo?", o: ["Atlântico", "Índico", "Pacífico"], r: "Pacífico" },
+          { p: "Qual é o planeta em que vivemos?", o: ["Terra", "Marte", "Júpiter"], r: "Terra" }
+        ]
+      },
+      {
+        nome: "História em Aventuras",
+        emoji: "🏛️",
+        categoria: "História",
+        descricao: "Aprenda sobre o passado.",
+        perguntas: [
+          { p: "Em que ano o Brasil declarou sua independência?", o: ["1500", "1822", "1889"], r: "1822" },
+          { p: "Quem foi o primeiro imperador do Brasil?", o: ["Dom Pedro I", "Dom Pedro II", "Tiradentes"], r: "Dom Pedro I" },
+          { p: "Qual civilização construiu as pirâmides de Gizé?", o: ["Romana", "Egípcia", "Grega"], r: "Egípcia" },
+          { p: "Em qual continente surgiu o Egito Antigo?", o: ["África", "Europa", "Oceania"], r: "África" }
+        ]
+      },
+      {
+        nome: "Inglês para Iniciantes",
+        emoji: "🇬🇧",
+        categoria: "Inglês",
+        descricao: "Aprenda palavras em inglês.",
+        perguntas: [
+          { p: "O que significa 'apple'?", o: ["Banana", "Maçã", "Laranja"], r: "Maçã" },
+          { p: "Como se diz 'gato' em inglês?", o: ["Dog", "Bird", "Cat"], r: "Cat" },
+          { p: "O que significa 'blue'?", o: ["Azul", "Verde", "Rosa"], r: "Azul" },
+          { p: "Como se diz 'obrigado' em inglês?", o: ["Please", "Thank you", "Hello"], r: "Thank you" }
+        ]
+      },
+      {
+        nome: "Desafio da Tabuada",
+        emoji: "✖️",
+        categoria: "Matemática",
+        descricao: "Teste seus conhecimentos de multiplicação.",
+        perguntas: [
+          { p: "7 × 3 = ?", o: ["21", "24", "18"], r: "21" },
+          { p: "8 × 4 = ?", o: ["28", "32", "36"], r: "32" },
+          { p: "9 × 5 = ?", o: ["40", "45", "50"], r: "45" },
+          { p: "6 × 6 = ?", o: ["30", "36", "42"], r: "36" }
+        ]
+      },
+      {
+        nome: "Ortografia Legal",
+        emoji: "✍️",
+        categoria: "Português",
+        descricao: "Escolha a escrita correta.",
+        perguntas: [
+          { p: "Qual está escrito corretamente?", o: ["Excessão", "Exceção", "Esceção"], r: "Exceção" },
+          { p: "Qual está escrito corretamente?", o: ["Coração", "Coraçao", "Coraçãum"], r: "Coração" },
+          { p: "Qual está escrito corretamente?", o: ["Jeito", "Geito", "Jeitto"], r: "Jeito" },
+          { p: "Qual está escrito corretamente?", o: ["Hoje", "Oje", "Hoge"], r: "Hoje" }
+        ]
+      },
+      {
+        nome: "Animais e Natureza",
+        emoji: "🐼",
+        categoria: "Ciências",
+        descricao: "Descubra curiosidades sobre animais.",
+        perguntas: [
+          { p: "Qual animal é um mamífero?", o: ["Golfinho", "Sardinha", "Tartaruga"], r: "Golfinho" },
+          { p: "Qual animal é conhecido como rei da selva?", o: ["Leão", "Coelho", "Pinguim"], r: "Leão" },
+          { p: "Qual destes animais põe ovos?", o: ["Gato", "Galinha", "Cachorro"], r: "Galinha" },
+          { p: "Qual é o maior animal terrestre?", o: ["Elefante-africano", "Cavalo", "Girafa"], r: "Elefante-africano" }
+        ]
+      },
+      {
+        nome: "Desafio das Bandeiras",
+        emoji: "🏳️",
+        categoria: "Geografia",
+        descricao: "Teste seus conhecimentos sobre países.",
+        perguntas: [
+          { p: "Qual país tem uma folha de bordo na bandeira?", o: ["Canadá", "Itália", "Japão"], r: "Canadá" },
+          { p: "Qual país tem uma bandeira com um círculo vermelho sobre fundo branco?", o: ["Japão", "México", "França"], r: "Japão" },
+          { p: "Qual país tem verde, amarelo, azul e branco na bandeira?", o: ["Brasil", "Chile", "Peru"], r: "Brasil" },
+          { p: "Qual país tem uma cruz vermelha sobre fundo branco na bandeira?", o: ["Suíça", "Argentina", "Colômbia"], r: "Suíça" }
+        ]
+      },
+      {
+        nome: "Planetas e Estrelas",
+        emoji: "🪐",
+        categoria: "Ciências",
+        descricao: "Viaje pelo sistema solar.",
+        perguntas: [
+          { p: "Qual é o maior planeta do sistema solar?", o: ["Terra", "Júpiter", "Marte"], r: "Júpiter" },
+          { p: "Qual estrela ilumina a Terra?", o: ["Sirius", "Sol", "Lua"], r: "Sol" },
+          { p: "Qual planeta é famoso por seus anéis?", o: ["Saturno", "Mercúrio", "Vênus"], r: "Saturno" },
+          { p: "Qual é o satélite natural da Terra?", o: ["Lua", "Sol", "Marte"], r: "Lua" }
+        ]
+      },
+      {
+        nome: "Palavras Cruzadas",
+        emoji: "🔤",
+        categoria: "Português",
+        descricao: "Teste seu vocabulário.",
+        perguntas: [
+          { p: "Qual palavra completa: CA__A (lugar onde moramos)?", o: ["SA", "MA", "TA"], r: "SA" },
+          { p: "Qual é o contrário de grande?", o: ["Alto", "Pequeno", "Largo"], r: "Pequeno" },
+          { p: "Qual palavra rima com coração?", o: ["Limão", "Casa", "Flor"], r: "Limão" },
+          { p: "Qual é o plural de papel?", o: ["Papels", "Papéis", "Papeis"], r: "Papéis" }
+        ]
+      },
+      {
+        nome: "Dinheiro Inteligente",
+        emoji: "💰",
+        categoria: "Matemática",
+        descricao: "Aprenda sobre valores e troco.",
+        perguntas: [
+          { p: "Você tem R$ 10 e gasta R$ 4. Quanto sobra?", o: ["R$ 5", "R$ 6", "R$ 7"], r: "R$ 6" },
+          { p: "Duas moedas de R$ 1 valem quanto?", o: ["R$ 1", "R$ 2", "R$ 3"], r: "R$ 2" },
+          { p: "Um caderno custa R$ 8. Você paga R$ 10. Qual é o troco?", o: ["R$ 1", "R$ 2", "R$ 3"], r: "R$ 2" },
+          { p: "Quanto é R$ 5 + R$ 2?", o: ["R$ 6", "R$ 7", "R$ 8"], r: "R$ 7" }
+        ]
+      },
+      {
+        nome: "Corpo Humano",
+        emoji: "🫀",
+        categoria: "Ciências",
+        descricao: "Conheça o funcionamento do corpo.",
+        perguntas: [
+          { p: "Qual órgão usamos para respirar?", o: ["Pulmões", "Rins", "Estômago"], r: "Pulmões" },
+          { p: "Quantos sentidos tradicionalmente estudamos?", o: ["Três", "Cinco", "Sete"], r: "Cinco" },
+          { p: "Qual parte do corpo usamos para ouvir?", o: ["Olhos", "Orelhas", "Nariz"], r: "Orelhas" },
+          { p: "Qual órgão ajuda a digerir os alimentos?", o: ["Estômago", "Coração", "Pulmão"], r: "Estômago" }
+        ]
+      },
+      {
+        nome: "Música e Sons",
+        emoji: "🎵",
+        categoria: "Artes",
+        descricao: "Explore o mundo da música.",
+        perguntas: [
+          { p: "Qual instrumento tem teclas pretas e brancas?", o: ["Piano", "Tambor", "Flauta"], r: "Piano" },
+          { p: "Qual instrumento costuma ter seis cordas?", o: ["Violão", "Pandeiro", "Triângulo"], r: "Violão" },
+          { p: "O que indica o ritmo de uma música?", o: ["A organização das batidas", "A cor do instrumento", "O tamanho do palco"], r: "A organização das batidas" },
+          { p: "Qual destes é um instrumento de percussão?", o: ["Tambor", "Violino", "Flauta"], r: "Tambor" }
+        ]
+      },
+      {
+        nome: "Cores e Formas",
+        emoji: "🎨",
+        categoria: "Artes",
+        descricao: "Aprenda sobre formas e cores.",
+        perguntas: [
+          { p: "Que cor resulta da mistura de azul e amarelo?", o: ["Verde", "Roxo", "Laranja"], r: "Verde" },
+          { p: "Quantos lados tem um triângulo?", o: ["Três", "Quatro", "Cinco"], r: "Três" },
+          { p: "Qual forma tem quatro lados iguais e quatro ângulos retos?", o: ["Círculo", "Quadrado", "Triângulo"], r: "Quadrado" },
+          { p: "Que cor resulta da mistura de vermelho e branco?", o: ["Rosa", "Verde", "Azul"], r: "Rosa" }
+        ]
+      },
+      {
+        nome: "Meio Ambiente",
+        emoji: "🌱",
+        categoria: "Ciências",
+        descricao: "Descubra como cuidar do planeta.",
+        perguntas: [
+          { p: "Em qual lixeira geralmente colocamos papel para reciclagem?", o: ["Azul", "Vermelha", "Marrom"], r: "Azul" },
+          { p: "Qual atitude economiza água?", o: ["Fechar a torneira ao escovar os dentes", "Deixar a torneira aberta", "Lavar a calçada diariamente com mangueira"], r: "Fechar a torneira ao escovar os dentes" },
+          { p: "Qual destes materiais pode ser reciclado?", o: ["Papel limpo", "Comida misturada ao lixo", "Poeira"], r: "Papel limpo" },
+          { p: "As árvores ajudam a absorver qual gás da atmosfera?", o: ["Dióxido de carbono", "Hélio", "Hidrogênio"], r: "Dióxido de carbono" }
+        ]
+      },
+      {
+        nome: "Desafio dos Verbos",
+        emoji: "📝",
+        categoria: "Português",
+        descricao: "Descubra ações e tempos verbais.",
+        perguntas: [
+          { p: "Qual destas palavras é um verbo?", o: ["Correr", "Bonito", "Janela"], r: "Correr" },
+          { p: "Qual é o passado de 'estudar' na frase 'Eu ___ ontem'?", o: ["Estudei", "Estudarei", "Estudo"], r: "Estudei" },
+          { p: "Na frase 'Ela canta', quem pratica a ação?", o: ["Ela", "Canta", "Ação"], r: "Ela" },
+          { p: "Qual verbo indica uma ação futura?", o: ["Brinquei", "Brinco", "Brincarei"], r: "Brincarei" }
+        ]
+      },
+      {
+        nome: "Frações Divertidas",
+        emoji: "🍕",
+        categoria: "Matemática",
+        descricao: "Entenda partes de um todo.",
+        perguntas: [
+          { p: "Qual fração representa metade?", o: ["1/2", "1/3", "1/4"], r: "1/2" },
+          { p: "Uma pizza tem 8 fatias. Você come 2. Que fração comeu?", o: ["2/8", "4/8", "8/2"], r: "2/8" },
+          { p: "Quanto é 1/4 de 20?", o: ["4", "5", "10"], r: "5" },
+          { p: "Qual fração é equivalente a 1/2?", o: ["2/4", "1/3", "3/5"], r: "2/4" }
+        ]
+      },
+      {
+        nome: "Lógica e Mistérios",
+        emoji: "🧩",
+        categoria: "Raciocínio",
+        descricao: "Resolva desafios de lógica.",
+        perguntas: [
+          { p: "Qual número vem a seguir: 2, 4, 6, 8, ...?", o: ["9", "10", "12"], r: "10" },
+          { p: "Se todos os gatos são animais, um gato é o quê?", o: ["Uma planta", "Um animal", "Um objeto"], r: "Um animal" },
+          { p: "Qual item não pertence ao grupo?", o: ["Maçã", "Banana", "Cadeira"], r: "Cadeira" },
+          { p: "Qual número é diferente dos outros?", o: ["2", "4", "7"], r: "7" }
+        ]
+      },
+      {
+        nome: "Pontuação Correta",
+        emoji: "❗",
+        categoria: "Português",
+        descricao: "Aprenda a usar sinais de pontuação.",
+        perguntas: [
+          { p: "Qual sinal usamos no final de uma pergunta?", o: ["?", ".", "!"], r: "?" },
+          { p: "Qual sinal indica uma pausa curta?", o: ["Vírgula", "Ponto final", "Interrogação"], r: "Vírgula" },
+          { p: "Qual sinal usamos para demonstrar surpresa?", o: ["Dois-pontos", "Exclamação", "Vírgula"], r: "Exclamação" },
+          { p: "Qual sinal normalmente termina uma frase declarativa?", o: ["Ponto final", "Interrogação", "Parêntese"], r: "Ponto final" }
+        ]
+      },
+      {
+        nome: "Descobrindo o Brasil",
+        emoji: "🇧🇷",
+        categoria: "Geografia",
+        descricao: "Conheça regiões e características do Brasil.",
+        perguntas: [
+          { p: "Quantas regiões oficiais o Brasil possui?", o: ["3", "5", "7"], r: "5" },
+          { p: "Qual é a maior região brasileira em área?", o: ["Norte", "Sul", "Sudeste"], r: "Norte" },
+          { p: "Em qual estado fica Salvador?", o: ["Bahia", "Sergipe", "Pernambuco"], r: "Bahia" },
+          { p: "Qual é a língua oficial do Brasil?", o: ["Português", "Espanhol", "Inglês"], r: "Português" }
+        ]
+      },
+      {
+        nome: "Frações e Porcentagens",
+        emoji: "💯",
+        categoria: "Matemática",
+        descricao: "Pratique porcentagens.",
+        perguntas: [
+          { p: "Quanto é 50% de 100?", o: ["25", "50", "75"], r: "50" },
+          { p: "Quanto é 25% de 100?", o: ["20", "25", "50"], r: "25" },
+          { p: "10% de 200 é quanto?", o: ["10", "20", "40"], r: "20" },
+          { p: "100% representa:", o: ["A metade", "Um quarto", "O total"], r: "O total" }
+        ]
+      },
+      {
+        nome: "Segurança na Internet",
+        emoji: "🔐",
+        categoria: "Tecnologia",
+        descricao: "Aprenda a navegar com segurança.",
+        perguntas: [
+          { p: "Você deve compartilhar sua senha com desconhecidos?", o: ["Sim", "Não", "Sempre"], r: "Não" },
+          { p: "O que fazer ao receber um link suspeito?", o: ["Clicar imediatamente", "Não clicar e pedir ajuda a um adulto de confiança", "Enviar para todos"], r: "Não clicar e pedir ajuda a um adulto de confiança" },
+          { p: "Qual informação deve ser protegida na internet?", o: ["Senha pessoal", "Nome de um filme", "Cor favorita"], r: "Senha pessoal" },
+          { p: "Se alguém desconhecido pedir seus dados pessoais, o que fazer?", o: ["Enviar tudo", "Não compartilhar e procurar um adulto de confiança", "Publicar nas redes"], r: "Não compartilhar e procurar um adulto de confiança" }
+        ]
+      },
+      {
+        nome: "Código e Tecnologia",
+        emoji: "💻",
+        categoria: "Tecnologia",
+        descricao: "Descubra conceitos básicos de tecnologia.",
+        perguntas: [
+          { p: "O que é um algoritmo?", o: ["Uma sequência de instruções", "Um tipo de monitor", "Um jogo de cartas"], r: "Uma sequência de instruções" },
+          { p: "Qual destes é um navegador de internet?", o: ["Firefox", "Teclado", "Impressora"], r: "Firefox" },
+          { p: "Qual destes é um dispositivo de entrada?", o: ["Teclado", "Monitor", "Alto-falante"], r: "Teclado" },
+          { p: "O que significa a sigla HTML?", o: ["HyperText Markup Language", "High Technology Machine Link", "Home Tool Modern Language"], r: "HyperText Markup Language" }
+        ]
+      },
+      {
+        nome: "Curiosidades do Mundo",
+        emoji: "🌟",
+        categoria: "Conhecimentos gerais",
+        descricao: "Teste seus conhecimentos gerais.",
+        perguntas: [
+          { p: "Quantos dias tem uma semana?", o: ["5", "7", "10"], r: "7" },
+          { p: "Qual é o animal terrestre mais rápido?", o: ["Guepardo", "Elefante", "Preguiça"], r: "Guepardo" },
+          { p: "Quantos meses tem um ano?", o: ["10", "12", "14"], r: "12" },
+          { p: "Qual destes é um alimento produzido pelas abelhas?", o: ["Mel", "Leite", "Farinha"], r: "Mel" }
+        ]
+      },
+      {
+        nome: "Hello Kitty e Amigos",
+        emoji: "🎀",
+        categoria: "Conhecimentos gerais",
+        descricao: "Um quiz fofo com tema de personagens kawaii.",
+        perguntas: [
+          { p: "Qual acessório é muito associado à Hello Kitty?", o: ["Laço", "Coroa de folhas", "Chapéu de pirata"], r: "Laço" },
+          { p: "Qual estilo é associado a coisas fofas e delicadas no Japão?", o: ["Kawaii", "Gótico", "Industrial"], r: "Kawaii" },
+          { p: "Que forma tem um coração?", o: ["Forma de coração", "Forma de triângulo", "Forma de estrela"], r: "Forma de coração" },
+          { p: "Qual cor aparece bastante em decorações kawaii?", o: ["Rosa", "Cinza escuro apenas", "Marrom apenas"], r: "Rosa" }
+        ]
+      },
+      {
+        nome: "Desafio das Emoções",
+        emoji: "😊",
+        categoria: "Conhecimentos gerais",
+        descricao: "Aprenda a reconhecer emoções e empatia.",
+        perguntas: [
+          { p: "Um amigo está triste. O que você pode fazer?", o: ["Ouvir e oferecer apoio", "Zombar dele", "Ignorar sempre"], r: "Ouvir e oferecer apoio" },
+          { p: "Qual atitude demonstra empatia?", o: ["Tentar compreender o sentimento de outra pessoa", "Interromper sempre", "Fazer pouco caso"], r: "Tentar compreender o sentimento de outra pessoa" },
+          { p: "Se você ficar com raiva, qual atitude pode ajudar?", o: ["Fazer uma pausa e respirar com calma", "Brigar imediatamente", "Culpar todo mundo"], r: "Fazer uma pausa e respirar com calma" },
+          { p: "Como resolver um desentendimento?", o: ["Conversar com respeito", "Gritar mais alto", "Espalhar boatos"], r: "Conversar com respeito" }
+        ]
+      },
+      {
+        nome: "Desafio das Profissões",
+        emoji: "👩‍🔬",
+        categoria: "Conhecimentos gerais",
+        descricao: "Descubra diferentes profissões.",
+        perguntas: [
+          { p: "Quem cuida da saúde dos dentes?", o: ["D
